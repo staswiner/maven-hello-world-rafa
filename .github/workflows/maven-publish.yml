@@ -65,11 +65,12 @@ jobs:
       #       env:
       #         GITHUB_TOKEN: ${{ github.token }}
 
-      # - name: Docker Login
-      #   uses: docker/login-action@v2.1.0
-      #   with:
-      #     username: myusername
-      #     password: mypassword
+      - name: Docker Login
+        uses: docker/login-action@v2.1.0
+        with:
+          username: staswiner
+          password: ${{ secrets.STAS_DOCKERHUB }}
+
       - run: ls ${{ github.workspace }}/myapp/target
       - name: Build and push Docker images
         uses: cloudposse/github-action-docker-build-push@1.11.0
@@ -81,6 +82,6 @@ jobs:
           repository: maven
           registry: docker.io
           # List of tags
-          tags: ${{ env.new_version }}
+          tags: type=pep440,pattern={{version}},value=${{ env.new_version }}
           # GitHub Token used to authenticate against a repository for Git context
           # github-token: # optional, default is ${{ github.token }}
