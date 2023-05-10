@@ -39,7 +39,7 @@ jobs:
         run: |
           # pom_dir="${{ github.workspace }}/myapp"
           ls 
-          ls pom.xmls
+          ls pom.xml
           version=$(xpath -q -e "/project/version/text()" pom.xml)
           echo $version
           # version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
