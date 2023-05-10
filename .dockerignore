@@ -1,0 +1,5 @@
+.github/
+myapp/target/
+*.swp
+.git/
+.gitignore
