@@ -34,20 +34,21 @@ jobs:
     - name: Install Package
       uses: ConorMacBride/install-package@v1.1.0
       with:
-        # Packages to install with apt on Linux
         apt: libxml-xpath-perl
-    - run: type xpath
-#     - shell: bash
-#       run: |
-#         version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-#         if [[ 1.1233 =~ ^[0-9]*\.[0-9]*\.[0-9]*$ ]]; then
-#           echo version is of unexpected semver format of x.y.z. Exiting..
-#           exit 1
-#         fi
-#         z_value=$(echo $version | cut -d\. -f3)
-#         new_z_value=$((z_value+1))
-#         new_version="$(echo $version | rev | cut -d. -f2- | rev).$new_z_value)"
-#         mvn versions:set -DnewVersion=$(new_version)
+    - shell: bash
+      run: |
+        ls
+        ls ${{ github.workspace }}
+        version=$(xpath -q -e "/project/version/text()" ${{ github.workspace }}/pom.xml)
+        version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+        if [[ 1.1233 =~ ^[0-9]*\.[0-9]*\.[0-9]*$ ]]; then
+          echo version is of unexpected semver format of x.y.z. Exiting..
+          exit 1
+        fi
+        z_value=$(echo $version | cut -d\. -f3)
+        new_z_value=$((z_value+1))
+        new_version="$(echo $version | rev | cut -d. -f2- | rev).$new_z_value)"
+        mvn versions:set -DnewVersion=$(new_version)
       
 
 
