@@ -55,7 +55,7 @@ jobs:
           mvn versions:set -DnewVersion=$new_version
           echo "new_version=$new_version" >> "${GITHUB_ENV}"
 
-      - run: ls ${{ github.workspace }}/myapp/target
+      - run: ls ${{ github.workspace }}/myapp/
       - name: Build with Maven
         working-directory: ${{ github.workspace }}/myapp
         run: mvn -B package --file pom.xml
