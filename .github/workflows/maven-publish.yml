@@ -73,11 +73,11 @@ jobs:
       - name: Build and push Docker images
         uses: docker/build-push-action@v4.0.0
         with:
-          build-args: JAR_VERSION="${{ env.new_version }}"
+          build-args: JAR_VERSION=${{ env.new_version }}
           # outputs: # optional
           platforms: linux/amd64
           push: true
           # List of tags
-          tags: maven:"${{ env.new_version }}"
+          tags: maven:${{ env.new_version }}
           # GitHub Token used to authenticate against a repository for Git context
           # github-token: # optional, default is ${{ github.token }}
