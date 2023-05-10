@@ -48,7 +48,7 @@ jobs:
           z_value=$(echo $version | cut -d\. -f3)
           new_z_value=$((z_value+1))
           new_version="$(echo $version | rev | cut -d. -f2- | rev).$new_z_value)"
-          mvn versions:set -DnewVersion=$(new_version)
+          mvn versions:set -DnewVersion=$new_version
 
 #     - name: Publish to GitHub Packages Apache Maven
 #       run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
