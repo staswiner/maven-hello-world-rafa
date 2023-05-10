@@ -50,7 +50,8 @@ jobs:
           fi
           z_value=$(echo $version | cut -d\. -f3)
           new_z_value=$((z_value+1))
-          new_version="$(echo $version | rev | cut -d. -f2- | rev).$new_z_value)"
+          new_version="$(echo $version | rev | cut -d. -f2- | rev).$new_z_value"
+          echo $new_version
           mvn versions:set -DnewVersion=$new_version
           echo "new_version=$new_version" >> "${GITHUB_ENV}"
 
