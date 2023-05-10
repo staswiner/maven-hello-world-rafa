@@ -6,7 +6,8 @@ COPY myapp /app
 WORKDIR /app
 RUN mvn package
 LABEL jar-version=${JAR_VERSION}}
-
+RUN ls 
+RUN ls /app/target
 FROM --platform=linux/amd64 anapsix/alpine-java:8_jdk
 ARG JAR_VERSION
 LABEL jar-version=${JAR_VERSION}
