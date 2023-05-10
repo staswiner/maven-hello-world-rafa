@@ -38,7 +38,10 @@ jobs:
         working-directory: ${{ github.workspace }}/myapp
         run: |
           # pom_dir="${{ github.workspace }}/myapp"
+          ls 
+          ls pom.xmls
           version=$(xpath -q -e "/project/version/text()" pom.xml)
+          echo $version
           # version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           if [[ $version =~ ^[0-9]*\.[0-9]*\.[0-9]*$ ]]; then
             echo version is of unexpected semver format of x.y.z. Exiting..
