@@ -55,6 +55,7 @@ jobs:
           mvn versions:set -DnewVersion=$new_version
           echo "new_version=$new_version" >> "${GITHUB_ENV}"
 
+      - run: ls ${{ github.workspace }}/myapp/target
       - name: Build with Maven
         working-directory: ${{ github.workspace }}/myapp
         run: mvn -B package --file pom.xml
@@ -69,7 +70,7 @@ jobs:
       #   with:
       #     username: myusername
       #     password: mypassword
-
+      - run: ls ${{ github.workspace }}/myapp/target
       - name: Build and push Docker images
         uses: docker/build-push-action@v4.0.0
         with:
