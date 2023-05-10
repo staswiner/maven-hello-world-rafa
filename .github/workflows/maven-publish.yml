@@ -5,11 +5,10 @@ name: Maven Package
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
-  workflow_dispatch: 
-  
+    branches: [master]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -19,38 +18,36 @@ jobs:
       packages: write
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 7
-      uses: actions/setup-java@v3
-      with:
-        java-version: '7'
-        distribution: 'zulu'
-        server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-        settings-path: ${{ github.workspace }} # location for the settings.xml file
+      - uses: actions/checkout@v3
+      - name: Set up JDK 7
+        uses: actions/setup-java@v3
+        with:
+          java-version: "7"
+          distribution: "zulu"
+          server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
+          settings-path: ${{ github.workspace }} # location for the settings.xml file
 
-#     - name: Build with Maven
-#       run: mvn -B package --file pom.xml
-    
-    - name: Install Package
-      uses: ConorMacBride/install-package@v1.1.0
-      with:
-        apt: libxml-xpath-perl
-    - shell: bash
-      run: |
-        ls
-        ls ${{ github.workspace }}
-        version=$(xpath -q -e "/project/version/text()" ${{ github.workspace }}/pom.xml)
-        version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-        if [[ 1.1233 =~ ^[0-9]*\.[0-9]*\.[0-9]*$ ]]; then
-          echo version is of unexpected semver format of x.y.z. Exiting..
-          exit 1
-        fi
-        z_value=$(echo $version | cut -d\. -f3)
-        new_z_value=$((z_value+1))
-        new_version="$(echo $version | rev | cut -d. -f2- | rev).$new_z_value)"
-        mvn versions:set -DnewVersion=$(new_version)
-      
+      #     - name: Build with Maven
+      #       run: mvn -B package --file pom.xml
 
+      - name: Install Package
+        uses: ConorMacBride/install-package@v1.1.0
+        with:
+          apt: libxml-xpath-perl
+      - shell: bash
+        working-directory: ${{ github.workspace }}/myapp
+        run: |
+          # pom_dir="${{ github.workspace }}/myapp"
+          version=$(xpath -q -e "/project/version/text()" pom.xml)
+          # version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          if [[ $version =~ ^[0-9]*\.[0-9]*\.[0-9]*$ ]]; then
+            echo version is of unexpected semver format of x.y.z. Exiting..
+            exit 1
+          fi
+          z_value=$(echo $version | cut -d\. -f3)
+          new_z_value=$((z_value+1))
+          new_version="$(echo $version | rev | cut -d. -f2- | rev).$new_z_value)"
+          mvn versions:set -DnewVersion=$(new_version)
 
 #     - name: Publish to GitHub Packages Apache Maven
 #       run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
