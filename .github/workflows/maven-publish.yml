@@ -81,6 +81,7 @@ jobs:
           target_branch: ${{ github.ref }}
           files: .
           remote_repository: origin
-          access_token: ${{ secrets.GITHUB_TOKEN }}
+          access_token: ${{ github.token }}
+          # ${{ secrets.GITHUB_TOKEN }}
           force: 0
           tags: myapp-${{ env.new_version }}
