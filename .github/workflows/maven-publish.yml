@@ -65,34 +65,13 @@ jobs:
           username: staswiner
           password: ${{ secrets.STAS_DOCKERHUB }}
 
-      # - name: Build and push Docker images
-      #   uses: cloudposse/github-action-docker-build-push@1.11.0
-      #   with:
-      #     platforms: linux/amd64
-      #     registry: docker.io
-      #     organization: staswiner
-      #     repository: maven
-      #     # List of tags
-      #     tags: type=pep440,pattern={{version}},value=${{ env.new_version }}
-      #     build-args: JAR_VERSION=${{ env.new_version }}
-
-      - name: git commit and push
-        run: |
-          git config --global user.name ${{ github.actor }}
-          git config --global user.email ${{ github.actor }}@users.noreply.github.com
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git commit -am "test"
-          git push
-      # - name: Git Commit Push Action
-      #   uses: GuillaumeFalourd/git-commit-push@v1.3
-      #   with:
-      #     email: ${{ github.actor }}@users.noreply.github.com
-      #     name: ${{ github.actor }}
-      #     commit_message: maven version ${{ env.new_version }}
-      #     target_branch: ${{ github.ref }}
-      #     files: .
-      #     remote_repository: origin
-      #     access_token: ${{ secrets.GITHUB_TOKEN }}
-      #     # ${{ secrets.GITHUB_TOKEN }}
-      #     force: 0
-      #     tags: myapp-${{ env.new_version }}
+      - name: Build and push Docker images
+        uses: cloudposse/github-action-docker-build-push@1.11.0
+        with:
+          platforms: linux/amd64
+          registry: docker.io
+          organization: staswiner
+          repository: maven
+          # List of tags
+          tags: type=pep440,pattern={{version}},value=${{ env.new_version }}
+          build-args: JAR_VERSION=${{ env.new_version }}
