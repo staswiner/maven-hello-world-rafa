@@ -9,7 +9,6 @@ on:
 
 permissions:
   contents: write
-  # repository-projects: write
 
 jobs:
   build:
@@ -72,6 +71,5 @@ jobs:
           registry: docker.io
           organization: staswiner
           repository: maven
-          # List of tags
           tags: type=pep440,pattern={{version}},value=${{ env.new_version }}
           build-args: JAR_VERSION=${{ env.new_version }}
