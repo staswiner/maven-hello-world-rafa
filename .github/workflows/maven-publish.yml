@@ -21,8 +21,8 @@ jobs:
         with:
           java-version: "8"
           distribution: "zulu"
-          server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-          settings-path: ${{ github.workspace }} # location for the settings.xml file
+          server-id: github
+          settings-path: ${{ github.workspace }}
 
       # There dilema present is whether to use xpath for querying the version and xmlstarlet for updating the value
       # Or to use `mvn evaluate` for querying and `mvn version:set` for updating the value.
@@ -55,33 +55,32 @@ jobs:
           mvn versions:set -DnewVersion=$new_version
           echo "new_version=$new_version" >> "${GITHUB_ENV}"
 
-      - run: ls ${{ github.workspace }}/myapp/
-      - name: Build with Maven
-        working-directory: ${{ github.workspace }}/myapp
-        run: mvn -B package --file pom.xml
-
-      #     - name: Publish to GitHub Packages Apache Maven
-      #       run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
-      #       env:
-      #         GITHUB_TOKEN: ${{ github.token }}
-
       - name: Docker Login
         uses: docker/login-action@v2.1.0
         with:
           username: staswiner
           password: ${{ secrets.STAS_DOCKERHUB }}
 
-      - run: ls ${{ github.workspace }}/myapp/target
       - name: Build and push Docker images
         uses: cloudposse/github-action-docker-build-push@1.11.0
         with:
-          build-args: JAR_VERSION=${{ env.new_version }}
-          # outputs: # optional
           platforms: linux/amd64
+          registry: docker.io
           organization: staswiner
           repository: maven
-          registry: docker.io
           # List of tags
           tags: type=pep440,pattern={{version}},value=${{ env.new_version }}
-          # GitHub Token used to authenticate against a repository for Git context
-          # github-token: # optional, default is ${{ github.token }}
+          build-args: JAR_VERSION=${{ env.new_version }}
+
+      - name: Git Commit Push Action
+        uses: GuillaumeFalourd/git-commit-push@v1.3
+        with:
+          email: ${{ github.actor }}@users.noreply.github.com
+          name: ${{ github.actor }}
+          commit_message: maven version ${{ env.new_version }}
+          target_branch: ${{ github.ref }}
+          files: .
+          remote_repository: origin
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+          force: 0
+          tags: myapp-${{ env.new_version }}
