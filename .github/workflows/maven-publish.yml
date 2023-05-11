@@ -65,16 +65,16 @@ jobs:
           username: staswiner
           password: ${{ secrets.STAS_DOCKERHUB }}
 
-      - name: Build and push Docker images
-        uses: cloudposse/github-action-docker-build-push@1.11.0
-        with:
-          platforms: linux/amd64
-          registry: docker.io
-          organization: staswiner
-          repository: maven
-          # List of tags
-          tags: type=pep440,pattern={{version}},value=${{ env.new_version }}
-          build-args: JAR_VERSION=${{ env.new_version }}
+      # - name: Build and push Docker images
+      #   uses: cloudposse/github-action-docker-build-push@1.11.0
+      #   with:
+      #     platforms: linux/amd64
+      #     registry: docker.io
+      #     organization: staswiner
+      #     repository: maven
+      #     # List of tags
+      #     tags: type=pep440,pattern={{version}},value=${{ env.new_version }}
+      #     build-args: JAR_VERSION=${{ env.new_version }}
 
       - name: git commit and push
         run: |
